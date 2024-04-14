@@ -2,23 +2,30 @@ import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import dayjs from "dayjs";
 
-function App() {
-  const localizer = dayjsLocalizer(dayjs);
+import { useEffect, useState } from "react";
 
-  const events = [
-    {
-      start: dayjs("2024-04-12T10:00:00").toDate(),
-      end: dayjs("2024-04-12T11:00:00").toDate(),
-      title: "Some title",
-    },
-  ];
+import fetchEvents from "./componentes/fetchEvents";
+import supabase from "./config/supabaseClient";
+
+function App() {
+  // const localizer = dayjsLocalizer(dayjs);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const getEvents = async () => {
+      const fetchedEvents = await fetchEvents();
+      setEvents(fetchedEvents);
+    };
+    getEvents();
+  }, []);
 
   return (
-    <Calendar
-      localizer={localizer}
-      events={events}
-      style={{ height: 500, width: 500 }}
-    />
+    <pre>{JSON.stringify(events, null, 2)}</pre>
+    // <Calendar
+    //   localizer={localizer}
+    //   events={events}
+    //   style={{ height: 500, width: 500 }}
+    // />
   );
 }
 export default App;
